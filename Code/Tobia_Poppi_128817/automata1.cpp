@@ -2,8 +2,8 @@
 
 using namespace std;
 
-//MACCHINA A STATI. IL PROGRAMMA PREVEDE COME INGRESSI IN ARGOMENTO LE LETTERE MINUSCOLE
-//SCRITTE CON SPAZI CHE LE DIVIDONO.
+//STATE MACHINE. THE PROGRAM WANTS AS AN INPUT IN THE ARGUMENT THE LETTERS LOWERCASE
+//WITH SPACES BETWEEN THEM
 
 const int schema[][4] = {{2, 1, 3, -1},{-1, 1, 3, -1},{0, -1, -1, -1},{-1, -1, -1, -1}};
 
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 		int i = 0;
 		while(true){
 			int argcurr = (int) argv[i+1][0];
-			int numero_lettera = argcurr - 97;
+			int numero_lettera = argcurr - 'a';
 			i++;
 			stato = controllo_successivo(stato, numero_lettera);
 			if (stato < 0){
