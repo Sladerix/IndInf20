@@ -7,9 +7,9 @@ using namespace std;
 const int schema[][4] = {{2, 1, 3, -1},{-1, 1, 3, -1},{0, -1, -1, -1},{-1, -1, -1, -1}};
 
 const string schema_out[][4] = {{"ora serve una a", "ora puoi mettere b, c", "fine", "errore"},
-																{"errore","ora puoi mettere b, c","fine","errore"},
-																{"ora puoi mettere a, b, c","errore","errore","errore"},
-																{"errore","errore","errore","errore"}};
+				{"errore","ora puoi mettere b, c","fine","errore"},
+				{"ora puoi mettere a, b, c","errore","errore","errore"},
+				{"errore","errore","errore","errore"}};
 
 int sfn(int statoattuale, int in){
 	return schema[statoattuale][in];
