@@ -5,7 +5,10 @@ using namespace std;
 //STATE MACHINE. THE PROGRAM WANTS AS AN INPUT IN THE ARGUMENT THE LETTERS LOWERCASE
 //WITH SPACES BETWEEN THEM
 
-const int schema[][4] = {{2, 1, 3, -1},{-1, 1, 3, -1},{0, -1, -1, -1},{-1, -1, -1, -1}};
+const int schema[][4] = {{2, 1, 3, -1},
+                         {-1, 1, 3, -1},
+                         {0, -1, -1, -1},
+                         {-1, -1, -1, -1}};
 
 int controllo_successivo(int statoattuale, int in){
 	return schema[statoattuale][in];
