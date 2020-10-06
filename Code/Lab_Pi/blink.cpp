@@ -1,5 +1,8 @@
 #include <iostream>
+
+#ifndef NO_PI
 #include <wiringPi.h>
+#endif
 
 using namespace std;
 
@@ -7,39 +10,52 @@ using namespace std;
 /// Configuration
 ///
 const int led_Blue = 0;
-const int mainLoopTimeoutMs = 1000;
-
-///
-/// Work with leds
-///
-void setLed(int n, bool onoff)
-{
-	cout << "Setting led " << n << " " << (onoff ? "ON" : "OFF") << endl;
-	digitalWrite(n, onoff);
-}
+const int timeoutMs = 1000;
 
 ///
 /// Utils
 ///
-
 void init()
 {
+#ifndef NO_PI
 	wiringPiSetup();
-	pinMode(led_Blue, OUTPUT);	
+    pinMode(led_Blue, OUTPUT);
+#endif
+}
+
+void setLed(int ledNumber, bool value)
+{
+#ifndef NO_PI
+    digitalWrite(ledNumber, value);
+#else
+    cout << "Setting led " << ledNumber << " to " << (value ? "ON" : "OFF") << endl;
+#endif
 }
 
 int main()
 {
-	init();
-	
-	bool set = false;
-	
-	while(1)
-	{
-		setLed(led_Blue, set);
-		set = !set;
+    init();
+
+    // Ok, inited. Now do your work...
+
+    bool onoff = true;
+
+    while(1)
+    {
+		// We can now add our custom logics here
 		
-		delay(mainLoopTimeoutMs);
-	}
-	return 0;
+		/////
+
+        // If this led blinks, then the loop is working
+        setLed(led_Blue, onoff);
+        onoff = !onoff;
+
+#ifndef NO_PI
+        delay(timeoutMs);
+#else
+        // TODO Add desktop delay (sleep?)
+#endif
+    }
+
+    return 0;
 }
