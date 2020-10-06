@@ -18,7 +18,7 @@ const int timeoutMs = 1000;
 void init()
 {
 #ifndef NO_PI
-	wiringPiSetup();
+    wiringPiSetup();
     pinMode(led_Blue, OUTPUT);
 #endif
 }
@@ -42,9 +42,8 @@ int main()
 
     while(1)
     {
-		// We can now add our custom logics here
-		
-		/////
+       	// We can now add our custom logics here
+	/////
 
         // If this led blinks, then the loop is working
         setLed(led_Blue, onoff);
