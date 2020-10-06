@@ -1,3 +1,7 @@
+///
+/// NOTE On Desktop systems, compile with -D NO_PI flag
+//
+
 #include <iostream>
 
 #ifndef NO_PI
