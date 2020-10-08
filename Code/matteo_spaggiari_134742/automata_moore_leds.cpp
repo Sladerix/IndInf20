@@ -10,14 +10,16 @@ const int ledBlue = 0;
 const int ledRed = 1;
 const int ledYellow = 2;
 const int ledGreen = 3;
-const int timeoutMs = 2000;
+const int timeoutMs = 3000;
+const bool ON = true;
+const bool OFF = false;
 int pins[] = {ledBlue, ledRed, ledYellow, ledGreen};
 int numberPins = sizeof(pins)/sizeof(pins[0]);
 
-void setLed(int ledNumber)
+void setLed(int ledNumber, bool action)
 {
 
-    digitalWrite(ledNumber, true);
+    digitalWrite(ledNumber, action);
 
 }
 
@@ -28,7 +30,7 @@ void resetLeds() {
     for(indexPins = 0; indexPins < numberPins; indexPins++)
     {
 
-        digitalWrite(pins[indexPins], false);
+        setLed(pins[indexPins], OFF);
 
     }
 
@@ -37,10 +39,15 @@ void resetLeds() {
 void init()
 {
     wiringPiSetup();
-    pinMode(ledBlue, OUTPUT);
-    pinMode(ledRed, OUTPUT);
-    pinMode(ledYellow, OUTPUT);
-    pinMode(ledGreen, OUTPUT);
+
+    int indexPins;
+    for(indexPins = 0; indexPins < numberPins; indexPins++)
+    {
+
+        pinMode(pins[indexPins], OUTPUT);
+
+    }
+
     resetLeds();
 }
 
@@ -67,17 +74,25 @@ void mfn(int currentState)
 {
 
     resetLeds();
+
     if(currentState < 0) {
-        digitalWrite(ledRed, true);
+        setLed(ledRed, ON);
         cout << "Input not legal!" << endl;
+        delay(timeoutMs);
+        // Turn OFF Led
+        setLed(ledRed, OFF);
     } else if(currentState == 0) {
-        digitalWrite(ledBlue, true);
+        setLed(ledBlue, ON);
+        cout << outmfn[currentState] << endl;
     } else if(currentState == 1 || currentState == 2) {
-        digitalWrite(ledYellow, true);
+        setLed(ledYellow, ON);
         cout << outmfn[currentState] << endl;
     } else if(currentState == 3) {
-        digitalWrite(ledGreen, true);
+        setLed(ledGreen, ON);
         cout << "Input is legal :)" << endl;
+        delay(timeoutMs);
+        // Turn OFF Led
+        setLed(ledGreen, OFF);
     }
 
 }
@@ -87,30 +102,45 @@ int main(int argc, char **argv)
 
         init();
 
-		int state = 0;
-		digitalWrite(ledBlue, true);
+	int state = 0;
+	setLed(ledBlue, ON);
 
-		while(true)
-		{
+	while(true)
+	{
 
-			char letter = ' ';
-			cout << "Insert a symbol: ";
-			cin >> letter;
-			int numLetter = (int) letter - 'a';
-			state = sfn(state, numLetter);
-			mfn(state);
-
-			if (state < 0)
-			{
-                break;
-				return -1;
-            }
-			else if (state == 3)
-			{
-                break;
-				return 0;
-            }
+		char letter = ' ';
+		cout << "Insert a symbol: ";
+		cin >> letter;
+		int numLetter = (int) letter - 'a';
+	
+		// Check if it's a legal symbol
+		if(numLetter < 0 || numLetter > 2) {
+	
+	                resetLeds();
+	                setLed(ledRed, ON);
+	                cout << "Symbol not legal" << endl;
+	                delay(timeoutMs);
+	                // Turn OFF Led
+	                setLed(ledRed, OFF);
+	                break;
+			return -1;
+	
 		}
+	
+		state = sfn(state, numLetter);
+		mfn(state);
+	
+		if (state < 0)
+		{
+                	break;
+			return -1;
+            	}
+		else if (state == 3)
+		{
+                	break;
+			return 0;
+            	}
+	}
 
         return 0;
 
