@@ -1,62 +1,100 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-
-//const char inputs[] = {'b', 'c'};
-const char inputs[] = {'a', 'a', 'b', 'c'};
-int inputs_size = sizeof(inputs) / sizeof(inputs[0]);
-
-
-
-char next()
-{
-	static int i = 0;
-	if(i >= inputs_size)
-		return 'x';
-	return inputs[i++];
-}
 
 /*
 S0 = 0
 S1 = 1
 S2 = 2
 S3 = 3
+
+State = -1 ---> input sequence not legal for state
+
+Accept input in form a,a,b,c for array, or a single value.
 */
+
+
+int nextState(int current_state, char inputs){
+
+    if (inputs == 'a' && current_state == 0){
+        return 2;
+    } else if (inputs == 'a' && current_state == 2){
+        return 0;
+    } else if (inputs == 'b' && current_state == 0){
+        return 1;
+    } else if (inputs == 'b' && current_state == 1){
+        return  1;
+    } else if (inputs == 'c' && current_state == 0){
+        return 3;
+    } else if (inputs == 'c' && current_state == 1){
+        return  3;
+    } else {
+        return -1;
+    }
+
+
+}
+
+
+
+//* The function split, split an char array.
+vector<char> split (char *arr, int arr_len, char splitby){
+    vector<char> list;
+
+    for(int i = 0; i < arr_len; i++){
+        if (arr[i] != splitby) {
+            auto it = list.insert(list.end(), arr[i]);
+        }
+    }
+    return list;
+}
 
 int main()
 {
+	char array[10];
+	char i;
+	int state;
+	int current_state = 0;
 
-	char c;
-	int stato = 0;
-	
-	std::cout << "Stato iniziale:" << stato << endl;
-	while(1)
+	vector<char> list;
+
+    cout << "Type 'x' to quit the program" << endl;
+    cout << "Accept input in format = a,a,b,c or a single value" << endl;
+
+    //*std::cout << "Stato iniziale:" << current_state << endl;
+	while(true)
 	{
-		c = next();
-		if (c == 'a' && stato == 0){
-			stato = 2;
-		} else if (c == 'a' && stato == 2){
-			stato = 0;
-		} else if (c == 'b' && stato == 0){
-			stato = 1;
-		} else if (c == 'b' && stato == 1){
-			stato = 1;
-		} else if (c == 'c' && stato == 0){
-			stato = 3;
-			cout << "Stato finale: " << stato << endl;
-			return 0;
-		} else if (c == 'c' && stato == 1){
-			stato = 3;
-			cout << "Stato finale: " << stato << endl;
-			return 0;
-		} else {
-			cout << "Error " << endl;
-			return 1;
-		}
-		cout << "Stato attuale: " << stato << endl;
-	
+        cout << "Enter sequence = ";
+        cin >> array;
+
+        list = split(array,(unsigned)strlen(array),',');
+
+	    for (int c = 0; c < list.size(); c++){
+	        i = list[c];
+            cout << "Current state: S" << current_state << endl;
+
+            if (i == 'x'){
+                cout << "Exited" << endl;
+                return 0;
+            }
+
+            state = nextState(current_state,i);
+
+            if(state == -1){
+                cout << "Input sequence (" << i << ") not legal for state S" << current_state << endl;
+                return -1;
+            } else if(state == 3) {
+                cout << "we're in final state: S3" << endl;
+                return 0;
+            } else {
+                cout << "Next state: S" << state << endl;
+                current_state = state;
+            }
+
+	    }
+
 	}
-	cout << "Stato finale: " << stato << endl;
-	return 0;
+
 }
