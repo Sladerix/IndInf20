@@ -103,7 +103,7 @@ vector<char> split (char *arr, int arr_len, char splitby){
 
     for(int i = 0; i < arr_len; i++){
         if (arr[i] != splitby) {
-            auto it = list.insert(list.end(), arr[i]);
+            list.insert(list.end(), arr[i]);
         }
     }
     return list;
