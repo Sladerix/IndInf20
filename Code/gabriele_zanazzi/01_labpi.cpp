@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -85,10 +86,20 @@ void isCurrentstateLegal(int currentState){
     }
 }
 
-int main(){
+void init(){
+    cout << "RESETTING ALL THE LEDs, TURNING THEM OFF..." << endl;
+    sleep(5);
+    cout << "RESET DONE!" << endl; // simulate the initialization of all the variables related to the LEDs
     cout << "Start your journey, good luck!" << endl;
     currentState = getState(flag);
     isCurrentstateLegal(currentState);
+}
+
+int main(){
+    // cout << "Start your journey, good luck!" << endl;
+    // currentState = getState(flag);
+    // isCurrentstateLegal(currentState);
+    init();
     while(flag){
         string letterInput;
         cout << "Insert a letter: " << endl;
