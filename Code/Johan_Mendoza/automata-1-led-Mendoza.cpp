@@ -2,9 +2,7 @@
 #include <vector>
 #include <cstring>
 
-#ifndef NO_PI
 #include <wiringPi.h>
-#endif
 
 
 ///
@@ -39,6 +37,39 @@ void setLed(int ledNumber, bool value)
     ///cout << "Setting led " << ledNumber << " to " << (value ? "ON" : "OFF") << endl;
 }
 
+
+//only one led is ON, and if led = O, all led will set OFF
+// B --> Blue, R --> Red, Y --> Yellow, G --> Green
+void OnlyOneOn(char led){
+    if (led == 'B'){
+        setLed(led_Red,false);
+        setLed(led_Yellow,false);
+        setLed(led_Green,false);
+        setLed(led_Blue,true);
+    } else if (led == 'R'){
+        setLed(led_Blue,false);
+        setLed(led_Yellow,false);
+        setLed(led_Green,false);
+        setLed(led_Red,true);
+    } else if (led == 'Y'){
+        setLed(led_Red,false);
+        setLed(led_Blue,false);
+        setLed(led_Green,false);
+        setLed(led_Yellow,true);
+    } else if (led == 'G'){
+        setLed(led_Red,false);
+        setLed(led_Yellow,false);
+        setLed(led_Blue,false);
+        setLed(led_Green,true);
+    } else {
+        setLed(led_Red,false);
+        setLed(led_Blue,false);
+        setLed(led_Yellow,false);
+        setLed(led_Green,false);
+
+    }
+}
+
 using namespace std;
 
 
@@ -57,36 +88,22 @@ Accept input in form a,a,b,c for array, or a single value.
 int nextState(int current_state, char inputs){
 
     if (inputs == 'a' && current_state == 0){
-        setLed(led_Blue, false);
-        setLed(led_Red,false);
-        setLed(led_Yellow, true);
+        OnlyOneOn('Y');
         return 2;
     } else if (inputs == 'a' && current_state == 2){
-        setLed(led_Yellow, false);
-        setLed(led_Red,false);
-        setLed(led_Blue, true);
+        OnlyOneOn('B');
         return 0;
     } else if (inputs == 'b' && current_state == 0){
-        setLed(led_Blue, false);
-        setLed(led_Red,false);
-        setLed(led_Yellow, true);
+        OnlyOneOn('Y');
         return 1;
     } else if (inputs == 'b' && current_state == 1){
-        setLed(led_Blue, false);
-        setLed(led_Red,false);
-        setLed(led_Yellow, true);
+        OnlyOneOn('Y');
         return  1;
     } else if (inputs == 'c' && current_state == 0){
-        setLed(led_Yellow, false);
-        setLed(led_Blue, false);
-        setLed(led_Red,false);
-        setLed(led_Green, true);
+        OnlyOneOn('G');
         return 3;
     } else if (inputs == 'c' && current_state == 1){
-        setLed(led_Yellow, false);
-        setLed(led_Blue, false);
-        setLed(led_Red,false);
-        setLed(led_Green, true);
+        OnlyOneOn('G');
         return  3;
     } else {
         return -1;
@@ -139,33 +156,17 @@ int main()
             cout << "Current state: S" << current_state << endl;
 
             if (i == 'x'){
-                cout << "Exited" << endl;
-                setLed(led_Red,true);
-                setLed(led_Blue,true);
-                setLed(led_Yellow,true);
-                setLed(led_Green,true);
+                for (int p = 0; p<2; p++) {
 
-                delay(500);
+                    setLed(led_Red, true);
+                    setLed(led_Blue, true);
+                    setLed(led_Yellow, true);
+                    setLed(led_Green, true);
 
-                setLed(led_Red,false);
-                setLed(led_Blue,false);
-                setLed(led_Yellow,false);
-                setLed(led_Green,false);
+                    delay(500);
+                    OnlyOneOn('O');
 
-                delay(500);
-
-                setLed(led_Red,true);
-                setLed(led_Blue,true);
-                setLed(led_Yellow,true);
-                setLed(led_Green,true);
-
-                delay(500);
-
-                setLed(led_Red,false);
-                setLed(led_Blue,false);
-                setLed(led_Yellow,false);
-                setLed(led_Green,false);
-
+                }
 
                 return 0;
             }
@@ -173,24 +174,20 @@ int main()
             state = nextState(current_state,i);
 
             if(state == -1){
+
                 cout << "Input sequence (" << i << ") not legal for state S" << current_state << endl;
-                setLed(led_Yellow, false);
-                setLed(led_Blue, false);
-                setLed(led_Red, true);
+                OnlyOneOn('R');
                 delay(timeoutMs);
 
-                setLed(led_Red, false);
-                setLed(led_Green, false);
+                OnlyOneOn('O');
                 return -1;
             } else if(state == 3) {
+
                 cout << "we're in final state: S3" << endl;
-                setLed(led_Yellow, false);
-                setLed(led_Blue, false);
-                setLed(led_Green, true);
+                OnlyOneOn('G');
                 delay(timeoutMs);
 
-                setLed(led_Green, false);
-                setLed(led_Red, false);
+                OnlyOneOn('O');
                 return 0;
             } else {
                 cout << "Next state: S" << state << endl;
