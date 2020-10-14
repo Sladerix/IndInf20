@@ -28,15 +28,15 @@ char next (string word) {
 int main() {
 
     // Create the map
-    map<pair<int, char>, int> legalInput;
+    map<pair<int, char>, pair<int, int>> legalInput;
 
     // Fill the map
-    legalInput.insert(make_pair(make_pair(0, 'a'), 2));
-    legalInput.insert(make_pair(make_pair(0, 'b'), 1));
-    legalInput.insert(make_pair(make_pair(0, 'c'), 3));
-    legalInput.insert(make_pair(make_pair(1, 'b'), 1));
-    legalInput.insert(make_pair(make_pair(1, 'c'), 3));
-    legalInput.insert(make_pair(make_pair(2, 'a'), 0));
+    legalInput.insert(make_pair(make_pair(0, 'a'), make_pair(2, 4)));
+    legalInput.insert(make_pair(make_pair(0, 'b'), make_pair(1, 2)));
+    legalInput.insert(make_pair(make_pair(0, 'c'), make_pair(3, 9)));
+    legalInput.insert(make_pair(make_pair(1, 'b'), make_pair(1, 1)));
+    legalInput.insert(make_pair(make_pair(1, 'c'), make_pair(3, 6)));
+    legalInput.insert(make_pair(make_pair(2, 'a'), make_pair(0, 5)));
 
     string input;
     cout << "Insert the path: ";
@@ -54,9 +54,11 @@ int main() {
         found = false;
         for (auto & it : legalInput) {
             if ((currState == it.first.first) && nextIn == it.first.second) {
-                currState = it.second;
+                cout << "Function output is: " << it.second.second << endl;
+                currState = it.second.first;
                 found = true;
                 cout << "State updated to: " << currState << endl;
+                cout << endl;
                 break;
             }
         }
@@ -73,8 +75,9 @@ int main() {
     return 0;
 
     error:
-        cout << nextIn << " is an illegal input" << endl;
+    cout << nextIn << " is an illegal input" << endl;
 
     return 1;
-    
+
 }
+
