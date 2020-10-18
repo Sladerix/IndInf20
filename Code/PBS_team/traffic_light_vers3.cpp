@@ -7,7 +7,7 @@ using namespace std;
 /// Configuration
 ///
 enum leds {
-    LED_RED = 1,
+    LED_RED = 0,
     LED_YELLOW,
     LED_GREEN
 };
@@ -25,7 +25,9 @@ enum times {
 };
 const int timeoutMs = 1000; // one second
 const bool errorState = false;
+
 int pins[] = {LED_RED, LED_YELLOW, LED_GREEN};
+
 int numberPins = sizeof(pins)/sizeof(pins[0]);
 int states[] = {2, // From state 0 I will go to 2
                 0, // From state 1 I will go to 0
@@ -33,7 +35,20 @@ int states[] = {2, // From state 0 I will go to 2
                 -1, // Non-existent state
                 5, // From state 3 I will go to 4
                 4}; // From state 4 I will go to 3
-const string outMfn[] = {"Green red", "Green light", "Green/Yellow light"};
+const string coutMfn[] = {"Green red", "Green light", "Green/Yellow light"};
+
+unsigned int count = 0;
+
+const int mfn1[][6] = {
+    {0, 0, 0, 0, 1 ,0},
+    {0, 0, 1, 0, 0 ,0},
+    {0, 0, 0, 0, 0 ,1}
+};
+const int mfn2[][3] = {
+    {1, 0, 0},
+    {0, 1, 1},
+    {0, 0, 1}
+};
 
 void setLed(int ledNumber, bool action)
 {
@@ -61,55 +76,33 @@ void init()
     resetLeds();
 }
 
-void normalCycle(int count)
+void normalCycle()
 {
     int initialState = 0;
     int currentState = initialState;
     setLed(LED_RED,ON);
-
-    while(1)
-    {
-
+    bool response;
+    while(1){
         cout << "Current value is " << count << endl;
-
-        switch(currentState)
-        {
-            case 0:
-                if(count == TIME_RED)
-                {
-                    currentState = states[currentState];
-                    resetLeds();
-                    setLed(LED_GREEN,ON);
-                    count = 0;
+        response = mfn1[currentState][count];
+        if (response == 1){
+            resetLeds();
+            currentState = states[currentState];
+            for (int i = 0; i < sizeof(mfn2)/sizeof(mfn2[0]); i++){
+                if (mfn2[currentState][i] == 1){
+                    setLed(pins[i], ON);
                 }
-                break;
-            case 1:
-                if(count == TIME_YELLOW_GREEN)
-                {
-                    currentState = states[currentState];
-                    resetLeds();
-                    setLed(LED_RED,ON);
-                    count = 0;
-                }
-                break;
-            case 2:
-                if(count == TIME_GREEN)
-                {
-                    currentState = states[currentState];
-                    resetLeds();
-                    setLed(LED_YELLOW,ON);
-                    setLed(LED_GREEN,ON);
-                    count = 0;
-                }
-                break;
+            }
+            count = 0;
         }
-        // Increment timer counter
-        count++;
-        delay(timeoutMs);
+        else{
+            count++;
+            delay(timeoutMs);
+        }
     }
 }
 
-void errorCycle(int count)
+void errorCycle()
 {
     int initialState = 4;
     int currentState = initialState;
@@ -149,16 +142,15 @@ void errorCycle(int count)
 void startTimer()
 {
 
-    unsigned int count = 1;
     cout << "Error State" << errorState << endl;
 
     if(!errorState)
     {
-        normalCycle(count);
+        normalCycle();
     }
     else
     {
-        errorCycle(count);
+        errorCycle();
     }
 
 }
