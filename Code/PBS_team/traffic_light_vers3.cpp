@@ -17,9 +17,9 @@ enum state_led {
 };
 // Times in second
 enum times {
-    TIME_RED = 1,
-    TIME_GREEN = 1,
-    TIME_YELLOW_GREEN = 1,
+    TIME_RED = 4,
+    TIME_GREEN = 5,
+    TIME_YELLOW_GREEN = 2,
     TIME_YELLOW_ERROR = 4,
     TIME_NO_LIGHT_ERROR = 4
 };
