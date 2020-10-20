@@ -12,7 +12,7 @@ const int yellow_led = 3;
 const int timeoutRedGreen = 4000;
 const int timeoutGreenYellow=3000;
 const int timeoutYellowRed=1000;
-
+const int nInterations=20;  ///if negative infinite loop
 int act_led=red_led; 
 
 void init (int led_n){
@@ -22,7 +22,7 @@ void init (int led_n){
 	#endif
 }
 
-void setLed ( int led_n, bool value){
+void setLeds ( int led_n, bool value){
 	cout << " led n "<< led_n << " setted to " << (value ? "ON" : "OFF") << endl;
 	#ifndef NO_PI
 		digitalWrite(led_n,value);
@@ -30,7 +30,7 @@ void setLed ( int led_n, bool value){
 }
  using namespace std;
  
- int previous_led(){
+int previous_led(){
 	int pl=act_led;
 	switch (act_led){
 		case yellow_led:
@@ -45,15 +45,11 @@ void setLed ( int led_n, bool value){
 	}
 	 return pl;
 	}
- 
- int main (){
-	init(blue_led);
-	init(red_led);
-	init(green_led);
-	init(yellow_led);
-	int i=0;
+
+void TurnOnLed(int iterations){
+	
 	int prev_led=0;
-	while(i<20){
+	while(iterations>0){
 		prev_led=previous_led();
 		setLed(prev_led,true);
 		switch (prev_led){
@@ -70,11 +66,17 @@ void setLed ( int led_n, bool value){
 		}
 		setLed(prev_led,false);
 		cout<<"pv led "<<prev_led<<"nxt led "<<act_led<<endl;
-		i+=1;
+		iterations-=1;
 	}
-	setLed(red_led,false);
-	setLed(green_led,false);
-	setLed(yellow_led,false);
+}
+ 
+ int main (){
+	init(blue_led);
+	init(red_led);
+	init(green_led);
+	init(yellow_led);
+	TurnOnLeds(nIterations);
+
 	return 0;
 }
  
