@@ -1,7 +1,7 @@
-Team Members:
+## Team Members:
 
-Johan Manuel Mendoza
-Henrique Saccani
+-Johan Manuel Mendoza
+-Henrique Saccani
 
 ## Projects Descriptions
 
