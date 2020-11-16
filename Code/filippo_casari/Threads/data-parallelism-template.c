@@ -16,6 +16,7 @@ void *pthread_fn(void *args) {
     for (;index < max; index++) {
         arr[index] = index * 2;
     }
+    return 0;	
 
 }
 
